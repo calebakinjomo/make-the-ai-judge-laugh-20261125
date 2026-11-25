@@ -18,11 +18,20 @@ ENTRY = (
 )
 
 
+OUTPUT_DIR = os.environ.get("ENTRY_OUTPUT_DIR", "/output")
+
+
 def main() -> None:
-    if not ENTRY or "\n" in ENTRY.strip() or len(ENTRY) > 280:
+    if (
+        not ENTRY
+        or ENTRY != ENTRY.strip()
+        or "\n" in ENTRY
+        or "\r" in ENTRY
+        or len(ENTRY) > 280
+    ):
         raise ValueError("ENTRY must be a single non-empty line of at most 280 characters")
-    os.makedirs("/output", exist_ok=True)
-    with open("/output/entry.txt", "w", encoding="utf-8") as f:
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    with open(os.path.join(OUTPUT_DIR, "entry.txt"), "w", encoding="utf-8", newline="\n") as f:
         f.write(ENTRY + "\n")
 
 
